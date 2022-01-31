@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
 
 import br.com.treinaweb.apispringcrud.entities.Cliente;
 import br.com.treinaweb.apispringcrud.repositories.ClienteRepository;
@@ -39,9 +39,9 @@ public class ClienteController {
 		return clienteRepository.findAll();
 	}
 	
-	@GetMapping("/{id}")
-	public Cliente buscarPorId(@PathVariable Long id) {
-		var clienteOptional = clienteRepository.findById(id);
+	@GetMapping("/{idCliente}")
+	public Cliente buscarPorId(@PathVariable Long idCliente) {
+		var clienteOptional = clienteRepository.findById(idCliente);
 		
 		if(clienteOptional.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -50,17 +50,30 @@ public class ClienteController {
 		return clienteOptional.get();	
 	}
 	
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/{idCliente}")
 	@ResponseStatus (code = HttpStatus.NO_CONTENT) /* operação foi realizada com sucesso, porém não tem nada a ser exibido */
-	public void deletarCliente(@PathVariable Long id) {
+	public void deletarCliente(@PathVariable Long idCliente) {
 		
-		Optional<Cliente> clienteOptional = clienteRepository.findById(id);
+		Optional<Cliente> clienteOptional = clienteRepository.findById(idCliente);
 		
 		if(clienteOptional.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
 		
 		clienteRepository.delete(clienteOptional.get());
+	}
+	
+	@PutMapping("/{idCliente}")
+	public Cliente atualizarPorId(@PathVariable Long idCliente, @RequestBody Cliente cliente) {
+		
+		Optional<Cliente> clienteOptional = clienteRepository.findById(idCliente);
+		
+		if(clienteOptional.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+		
+		cliente.setId(idCliente);
+		return clienteRepository.save(cliente);
 		
 	}
 
