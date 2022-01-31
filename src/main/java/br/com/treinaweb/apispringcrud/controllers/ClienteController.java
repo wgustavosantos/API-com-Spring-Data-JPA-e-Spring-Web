@@ -1,6 +1,8 @@
 package br.com.treinaweb.apispringcrud.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,9 +16,10 @@ public class ClienteController {
 	@Autowired
 	private ClienteRepository clienteRepository;
 	
-	public Cliente cadastrar(Cliente cliente) {
+	@PostMapping
+	public Cliente cadastrar(@RequestBody Cliente cliente) {
 		
-		return null;
+		return clienteRepository.save(cliente);
 	}
 
 }
