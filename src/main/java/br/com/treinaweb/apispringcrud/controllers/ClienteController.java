@@ -1,9 +1,11 @@
 package br.com.treinaweb.apispringcrud.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +47,20 @@ public class ClienteController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
 		
-		return clienteOptional.get();
+		return clienteOptional.get();	
+	}
+	
+	@DeleteMapping("/{id}")
+	@ResponseStatus (code = HttpStatus.NO_CONTENT) /* operação foi realizada com sucesso, porém não tem nada a ser exibido */
+	public void deletarCliente(@PathVariable Long id) {
+		
+		Optional<Cliente> clienteOptional = clienteRepository.findById(id);
+		
+		if(clienteOptional.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+		
+		clienteRepository.delete(clienteOptional.get());
 		
 	}
 
